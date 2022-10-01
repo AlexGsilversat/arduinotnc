@@ -51,6 +51,35 @@ def list():
     filelist.sort()
     return "\n".join(filelist)+'\n'
 
+@app.route('/tweet')
+def tweet():
+    from twython import Twython
+    from datetime import datetime
+    print (datetime.now())
+
+    consumer_key        = 'n6yc49v1pHc8w9bW0kKv4wNUd'
+    consumer_secret     = 'd3L4lVQep8MApUptGb59PGNPpHBBpK70I3Cr39C0jDjztASJlW'
+    access_token        = '1313567351762280451-nIfagojWjM6LzWGGCOOIVu8EN3FZkK'
+    access_token_secret = 'jGwWAICERyJsowpe6F5NgoOxHFl1jvwDS9iM7HeenrLfS'
+    twitter = Twython(
+        consumer_key,        
+        consumer_secret,     
+        access_token,        
+        access_token_secret 
+    )
+
+
+    message = [datetime.now()]
+    if f.filename == "" or secure_filename(f.filename) == "":
+          return "Bad filename\n",400
+    f = request.files['file']
+    photo = open(f, 'rb')
+
+    response = twitter.upload_media(media=photo)
+    twitter.update_status(status=message, media_ids=[response['media_id']])
+    print("Tweeted: %s with image %s" % (message, myimage))
+    return "Successfull tweet\n",200
+
 if __name__ == '__main__':
    # app.run(host='127.0.0.1',port=5001) # running the flask app
    app.run(host='192.168.100.101',port=5001) # running the flask app
